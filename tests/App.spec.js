@@ -55,7 +55,7 @@ test("Unsuccessful authorization", async () => {
   await page.click('[data-testid="login-submit-btn"]');
   const error = await page.locator('[data-testid="login-error-hint"]');
   await expect(error).toHaveText("Вы ввели неправильно логин или пароль");
-  await page.screenshot({ path: "screenshotFailed.png", fullPage: true });
+  await page.screenshot({ path: "screenshotFailed.png", fullPage: false });
   await browser.close();
 }, 5000);
 
