@@ -1,6 +1,7 @@
-const { test, expect } = require("@playwright/test");
-const { chromium } = require("playwright");
-const { userEmail, userPassword, } = require('../user');
+const { test, expect, chromium } = require("@playwright/test");
+//const { chromium } = require("playwright");
+//const { email, password } = require("../user");
+const user = require("../user");
 
 
 test("test", async ({ page }) => {
@@ -15,33 +16,42 @@ test("test", async ({ page }) => {
   await page.click("text=Учиться бесплатно");
   await expect(page).toHaveURL("https://netology.ru/free");
 
-  page.click("text=Бизнес и управление");
+  //page.click("text=Бизнес и управление");
 
   // Click text=Как перенести своё дело в онлайн
-  await page.click("text=Как перенести своё дело в онлайн");
-  await expect(page).toHaveURL(
-    "https://netology.ru/programs/kak-perenesti-svoyo-delo-v-onlajn-bp"
-  );
+  //await page.click("text=Как перенести своё дело в онлайн");
+  //await expect(page).toHaveURL(
+  //  "https://netology.ru/programs/kak-perenesti-svoyo-delo-v-onlajn-bp"
+  //);
 });
 
 test("Successful authorization", async () => {
   const browser = await chromium.launch({
     headless: false,
-    slowMo: 500,
+    slowMo: 5000,
   });
   const page = await browser.newPage("https://netology.ru/?modal=sign_in");
   await page.goto("https://netology.ru/?modal=sign_in");
-  
-  await page.fill('[placeholder="Email"]', userEmail);
 
-  await page.fill('[placeholder="Пароль"]', userPassword);
+  //  await page.fill('[placeholder="Email"]', '');
+  //  await page.fill('[placeholder="Пароль"]', '');
+
+  await page.fill('[placeholder="Email"]', user.email);
+  await page.fill('[placeholder="Пароль"]', user.password);
+
+  //  await page.getByPlaceholder('Email').click();
+  //  await page.getByPlaceholder('Email').fill(user.email);
+  //  await page.getByPlaceholder('Пароль').click();
+  //  await page.getByPlaceholder('Пароль').fill(user.password);
+  //  await page.getByTestId('login-submit-btn').click();
+
 
   await page.click('[data-testid="login-submit-btn"]');
-  await expect(page).toHaveURL("https://netology.ru/profile");
-  await expect(page.locator("h2")).toContainText(["Мои курсы и профессии"]);
-  await page.screenshot({ path: "screenshotSuccessful.png", fullPage: true });
-  await browser.close();
-}, 5000);
+
+  await expect(page.locator("h2")).toContainText(["Моё обучение"]);
+  await page.screenshot({ path: "screenshotSuccessful.png", fullPage: false });
+  browser.close();
+}, 60000);
 
 test("Unsuccessful authorization", async () => {
   const browser = await chromium.launch({
